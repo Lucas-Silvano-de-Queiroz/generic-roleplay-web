@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { motion } from "motion/react";
 import { loginUser } from "@/app/actions/login";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
@@ -17,12 +18,16 @@ export function LoginForm() {
   return (
     <form action={formAction} className="flex flex-col gap-5">
       {state.message && (
-        <div
+        <motion.div
+          key="error"
           role="alert"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, x: [0, -8, 8, -6, 6, 0] }}
+          transition={{ duration: 0.4 }}
           className="rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
         >
           {state.message}
-        </div>
+        </motion.div>
       )}
 
       <Input

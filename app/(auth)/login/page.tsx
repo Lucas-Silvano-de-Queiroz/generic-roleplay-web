@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { RevealOnMount } from "@/app/components/reveal";
 import { LoginForm } from "./login-form";
 
 export default function LoginPage() {
   return (
-    <div className="flex w-full max-w-sm flex-col gap-8">
+    <RevealOnMount className="flex w-full max-w-sm flex-col gap-8">
       <div className="text-center">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
           Bem-vindo de volta
@@ -22,6 +23,6 @@ export default function LoginPage() {
           Cadastrar
         </Link>
       </p>
-    </div>
+    </RevealOnMount>
   );
 }
