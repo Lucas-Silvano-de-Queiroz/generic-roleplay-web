@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { GridBackground } from "@/app/components/grid-background";
 
 export const metadata: Metadata = {
   title: "Generic Roleplay Web",
@@ -18,7 +19,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <GridBackground />
+        <main className="relative z-10 flex flex-1 flex-col">{children}</main>
+      </body>
     </html>
   );
 }
