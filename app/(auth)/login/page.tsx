@@ -1,25 +1,25 @@
 import Link from "next/link";
-import { RegisterForm } from "./register-form";
+import { LoginForm } from "./login-form";
 
-export default function RegisterPage() {
+export default function LoginPage() {
   return (
     <div className="flex w-full max-w-sm flex-col gap-8">
       <div className="text-center">
         <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-          Comece sua jornada
+          Bem-vindo de volta
         </p>
-        <h1 className="mt-3 text-2xl font-medium tracking-tight">Criar conta</h1>
+        <h1 className="mt-3 text-2xl font-medium tracking-tight">Entrar</h1>
       </div>
 
-      <RegisterForm />
+      <LoginForm />
 
       <p className="text-center text-sm text-muted-foreground">
-        Já tem conta?{" "}
+        Ainda não tem conta?{" "}
         <Link
-          href="/login"
+          href="/register"
           className="text-foreground underline-offset-4 hover:underline"
         >
-          Entrar
+          Cadastrar
         </Link>
       </p>
     </div>

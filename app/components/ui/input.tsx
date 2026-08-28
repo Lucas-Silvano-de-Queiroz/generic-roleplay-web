@@ -22,10 +22,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           aria-invalid={error ? true : undefined}
           className={[
-            "h-10 w-full rounded-md border border-input bg-background px-3 text-sm",
-            "placeholder:text-muted-foreground",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-            error && "border-destructive focus-visible:ring-destructive",
+            "h-12 w-full rounded-xl border border-input bg-muted/40 px-4 text-base",
+            "placeholder:text-muted-foreground/70",
+            "focus-visible:outline-none focus-visible:border-primary/50 focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-0",
+            "transition-colors",
+            error && "border-destructive/60 focus-visible:ring-destructive/20",
             className,
           ].join(" ")}
           {...props}

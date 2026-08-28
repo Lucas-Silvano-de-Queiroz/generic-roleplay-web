@@ -9,7 +9,7 @@ export function Card({ children, className = "" }: CardProps) {
   return (
     <div
       className={[
-        "w-full max-w-md rounded-xl border border-border bg-background p-8 shadow-lg",
+        "w-full max-w-md rounded-2xl border border-border/60 bg-card/90 p-8 shadow-[0_24px_80px_-32px_rgba(0,0,0,0.8)] backdrop-blur-sm",
         className,
       ].join(" ")}
     >

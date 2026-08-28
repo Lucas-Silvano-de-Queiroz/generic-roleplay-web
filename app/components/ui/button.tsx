@@ -9,16 +9,17 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
-    "bg-primary text-primary-foreground hover:opacity-90 focus-visible:ring-primary",
+    "bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring",
   outline:
-    "border border-border bg-transparent hover:bg-muted focus-visible:ring-primary",
-  ghost: "bg-transparent hover:bg-muted focus-visible:ring-primary",
+    "border border-border/70 text-foreground hover:bg-muted focus-visible:ring-ring",
+  ghost:
+    "text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:ring-ring",
 };
 
 const sizeClasses: Record<NonNullable<ButtonProps["size"]>, string> = {
-  sm: "h-8 px-3 text-sm",
-  md: "h-10 px-4 text-sm",
-  lg: "h-12 px-6 text-base",
+  sm: "h-8 px-4 text-sm",
+  md: "h-11 px-5 text-sm",
+  lg: "h-12 px-7 text-base",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -27,8 +28,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const classes = [
-      "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+      "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-colors",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
       "disabled:pointer-events-none disabled:opacity-60",
       variantClasses[variant],
       sizeClasses[size],

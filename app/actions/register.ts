@@ -14,6 +14,7 @@ export async function registerUser(
   const name = String(formData.get("name") ?? "");
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
+  const confirmPassword = String(formData.get("confirmPassword") ?? "");
 
   const errors: RegisterState["errors"] = {};
 
@@ -31,6 +32,8 @@ export async function registerUser(
     errors.password = "Informe uma senha.";
   } else if (password.length < 6) {
     errors.password = "A senha deve ter pelo menos 6 caracteres.";
+  } else if (password !== confirmPassword) {
+    errors.confirmPassword = "As senhas não coincidem.";
   }
 
   if (Object.keys(errors).length > 0) {
