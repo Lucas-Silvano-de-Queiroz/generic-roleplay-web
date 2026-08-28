@@ -1,7 +1,6 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { motion } from "motion/react";
 import { Button } from "@/app/components/ui/button";
 
 type MotionButtonProps = {
@@ -24,11 +23,13 @@ export function MotionButton({
   children,
 }: MotionButtonProps) {
   return (
-    <motion.div
-      whileHover={{ scale: 1.03, y: -1 }}
-      whileTap={{ scale: 0.97 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className={className}
+    <div
+      className={[
+        "transition-transform duration-200 ease-out hover:-translate-y-px hover:scale-[1.03] active:scale-[0.97]",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       <Button
         variant={variant}
@@ -39,6 +40,6 @@ export function MotionButton({
       >
         {children}
       </Button>
-    </motion.div>
+    </div>
   );
 }

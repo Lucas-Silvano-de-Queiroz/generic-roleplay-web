@@ -1,7 +1,12 @@
 "use client";
 
-import { type ReactNode } from "react";
-import { motion, type Variants } from "motion/react";
+import {
+  Children,
+  cloneElement,
+  isValidElement,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 
 export function Stagger({
   children,
@@ -12,56 +17,40 @@ export function Stagger({
   className?: string;
   stagger?: number;
 }) {
-  const container: Variants = {
-    hidden: {},
-    show: {
-      transition: {
-        staggerChildren: stagger,
-      },
-    },
-  };
+  const items = Children.toArray(children);
 
   return (
-    <motion.div
-      className={className}
-      variants={container}
-      initial="hidden"
-      animate="show"
-    >
-      {children}
-    </motion.div>
+    <div className={className}>
+      {items.map((child, index) => {
+        if (!isValidElement<{ style?: CSSProperties }>(child)) {
+          return child;
+        }
+        const style = {
+          animationDelay: `${index * stagger}s`,
+          ...(child.props.style ?? {}),
+        } as CSSProperties;
+        return cloneElement(child, { style });
+      })}
+    </div>
   );
 }
-
-const item: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 12,
-    filter: "blur(4px)",
-  },
-  show: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: {
-      type: "spring",
-      stiffness: 260,
-      damping: 28,
-    },
-  },
-};
 
 export function Reveal({
   children,
   className = "",
+  style,
 }: {
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
 }) {
   return (
-    <motion.div className={className} variants={item}>
+    <div
+      className={["animate-fade-up", className].filter(Boolean).join(" ")}
+      style={style}
+    >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -75,13 +64,11 @@ export function RevealOnMount({
   delay?: number;
 }) {
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      transition={{ type: "spring", stiffness: 240, damping: 28, delay }}
+    <div
+      className={["animate-fade-up", className].filter(Boolean).join(" ")}
+      style={{ animationDelay: `${delay}s` }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
