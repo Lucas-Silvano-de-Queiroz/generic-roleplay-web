@@ -1,0 +1,9 @@
+import "server-only";
+import { apiRequest } from "@/lib/api/client";
+import { decodeCollection, decodeCollectionList, isUuid, type CreateCollection, type RpgCollection, type UpdateCollection } from "@/lib/api/contracts";
+import type { ApiResult } from "@/lib/api/errors";
+export const listCollections = (systemId: string) => isUuid(systemId) ? apiRequest<RpgCollection[]>(`/rpg-systems/${systemId}/collections`, { method: "GET", auth: "session", parseResponse: decodeCollectionList }) : Promise.resolve<ApiResult<RpgCollection[]>>({ ok: false, error: { kind: "invalid-response", message: "Invalid system identifier" } });
+export const getCollection = (id: string) => isUuid(id) ? apiRequest<RpgCollection>(`/rpg-collections/${id}`, { method: "GET", auth: "session", parseResponse: decodeCollection }) : Promise.resolve<ApiResult<RpgCollection>>({ ok: false, error: { kind: "invalid-response", message: "Invalid collection identifier" } });
+export const createCollection = (systemId: string, input: CreateCollection) => isUuid(systemId) ? apiRequest<RpgCollection>(`/rpg-systems/${systemId}/collections`, { method: "POST", auth: "session", body: input, parseResponse: decodeCollection }) : Promise.resolve<ApiResult<RpgCollection>>({ ok: false, error: { kind: "invalid-response", message: "Invalid system identifier" } });
+export const updateCollection = (id: string, input: UpdateCollection) => isUuid(id) ? apiRequest<RpgCollection>(`/rpg-collections/${id}`, { method: "PATCH", auth: "session", body: input, parseResponse: decodeCollection }) : Promise.resolve<ApiResult<RpgCollection>>({ ok: false, error: { kind: "invalid-response", message: "Invalid collection identifier" } });
+export const deleteCollection = (id: string) => isUuid(id) ? apiRequest<void>(`/rpg-collections/${id}`, { method: "DELETE", auth: "session" }) : Promise.resolve<ApiResult<void>>({ ok: false, error: { kind: "invalid-response", message: "Invalid collection identifier" } });

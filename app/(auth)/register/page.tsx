@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { RevealOnMount } from "@/app/components/reveal";
 import { RegisterForm } from "./register-form";
+import { redirectAuthenticatedUser } from "@/lib/auth/session";
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  await redirectAuthenticatedUser();
   return (
     <RevealOnMount className="flex w-full max-w-sm flex-col gap-8">
       <div className="text-center">

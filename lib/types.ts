@@ -1,23 +1,5 @@
-export type RegisterFieldErrors = {
-  name?: string;
-  email?: string;
-  password?: string;
-  confirmPassword?: string;
-};
-
-export type RegisterState = {
-  errors?: RegisterFieldErrors;
-  message?: string;
-  success?: boolean;
-};
-
-export type LoginFieldErrors = {
-  email?: string;
-  password?: string;
-};
-
-export type LoginState = {
-  errors?: LoginFieldErrors;
-  message?: string;
-  success?: boolean;
-};
+import type { FormState } from "@/lib/forms/state";
+export type RegisterFieldErrors = NonNullable<FormState["fieldErrors"]> & { confirmPassword?: string };
+export type RegisterState = FormState & { errors?: RegisterFieldErrors; fieldErrors?: RegisterFieldErrors };
+export type LoginFieldErrors = FormState["fieldErrors"];
+export type LoginState = FormState & { errors?: LoginFieldErrors; fieldErrors?: LoginFieldErrors };

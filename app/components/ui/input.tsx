@@ -3,11 +3,14 @@ import { forwardRef } from "react";
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   error?: string;
+  hint?: string;
 };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, id, className = "", ...props }, ref) => {
+  ({ label, error, hint, id, className = "", ...props }, ref) => {
     const inputId = id ?? props.name;
+    const errorId = error ? `${inputId}-error` : undefined;
+    const hintId = hint ? `${inputId}-hint` : undefined;
 
     return (
       <div className="flex flex-col gap-1.5">
@@ -21,6 +24,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           aria-invalid={error ? true : undefined}
+          aria-describedby={[hintId, errorId].filter(Boolean).join(" ") || undefined}
           className={[
             "h-12 w-full rounded-xl border border-input bg-muted/40 px-4 text-base",
             "placeholder:text-muted-foreground/70",
@@ -31,8 +35,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ].join(" ")}
           {...props}
         />
+        {hint && <p id={hintId} className="text-xs text-muted-foreground">{hint}</p>}
         {error && (
-          <p role="alert" className="text-sm text-destructive">
+          <p id={errorId} role="alert" className="text-sm text-destructive">
             {error}
           </p>
         )}

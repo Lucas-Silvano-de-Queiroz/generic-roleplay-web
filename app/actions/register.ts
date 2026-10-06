@@ -1,63 +1,30 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { decodeUserCreated } from "@/lib/api/contracts";
+import { apiRequest } from "@/lib/api/client";
+import { mapApiError } from "@/lib/api/errors";
+import { formString } from "@/lib/forms/state";
+import { validateRegister } from "@/lib/validation/identity";
 import type { RegisterState } from "@/lib/types";
-
-const REGISTER_API_URL = "https://generic-roleplay-api.vercel.app/users";
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function registerUser(
   _prevState: RegisterState,
   formData: FormData
 ): Promise<RegisterState> {
-  const name = String(formData.get("name") ?? "");
-  const email = String(formData.get("email") ?? "");
-  const password = String(formData.get("password") ?? "");
-  const confirmPassword = String(formData.get("confirmPassword") ?? "");
-
-  const errors: RegisterState["errors"] = {};
-
-  if (!name.trim()) {
-    errors.name = "Informe seu nome.";
+  const password = formString(formData, "password");
+  const validation = validateRegister({ name: formString(formData, "name"), email: formString(formData, "email"), password });
+  const fieldErrors: NonNullable<RegisterState["fieldErrors"]> = validation.valid ? {} : validation.fieldErrors;
+  if (password !== formString(formData, "confirmPassword")) fieldErrors.confirmPassword = "As senhas não coincidem.";
+  if (Object.keys(fieldErrors).length) return { fieldErrors, errors: fieldErrors };
+  const result = await apiRequest("/users", { method: "POST", auth: "public", body: validation.valid ? validation.data : undefined, parseResponse: decodeUserCreated });
+  if (!result.ok) {
+    if (result.error.statusCode === 409 && result.error.message === "User already exists") {
+      const emailError = { email: "Este e-mail já está cadastrado." };
+      return { fieldErrors: emailError, errors: emailError };
+    }
+    const failure = mapApiError(result.error);
+    return { ...failure, errors: failure.fieldErrors };
   }
-
-  if (!email.trim()) {
-    errors.email = "Informe seu e-mail.";
-  } else if (!EMAIL_REGEX.test(email.trim())) {
-    errors.email = "Informe um e-mail válido.";
-  }
-
-  if (!password) {
-    errors.password = "Informe uma senha.";
-  } else if (password.length < 6) {
-    errors.password = "A senha deve ter pelo menos 6 caracteres.";
-  } else if (password !== confirmPassword) {
-    errors.confirmPassword = "As senhas não coincidem.";
-  }
-
-  if (Object.keys(errors).length > 0) {
-    return { errors };
-  }
-
-  const response = await fetch(REGISTER_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name: name.trim(),
-      email: email.trim(),
-      password,
-    }),
-  });
-
-  if (!response.ok) {
-    return {
-      message:
-        "Não foi possível concluir o cadastro. Verifique os dados e tente novamente.",
-    };
-  }
-
-  redirect("/");
+  redirect("/login?registered=1");
 }

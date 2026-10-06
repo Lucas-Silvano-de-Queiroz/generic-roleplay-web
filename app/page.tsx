@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Stagger, Reveal, RevealOnMount } from "@/app/components/reveal";
 import { MotionButton } from "@/app/components/motion-button";
+import { redirectAuthenticatedUser } from "@/lib/auth/session";
 
-export default function Home() {
+export default async function Home() {
+  await redirectAuthenticatedUser();
   return (
     <main className="flex min-h-dvh flex-1 flex-col items-center justify-center gap-10 px-4 text-center">
       <Stagger className="flex flex-col items-center gap-4">

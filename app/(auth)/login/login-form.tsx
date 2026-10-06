@@ -5,10 +5,12 @@ import { loginUser } from "@/app/actions/login";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import type { LoginState } from "@/lib/types";
+import { FormAlert } from "@/app/components/forms/form-alert";
+import { FocusFirstError } from "@/app/components/forms/focus-first-error";
 
 const initialState: LoginState = {};
 
-export function LoginForm() {
+export function LoginForm({ next }: { next?: string }) {
   const [state, formAction, pending] = useActionState(
     loginUser,
     initialState
@@ -16,15 +18,9 @@ export function LoginForm() {
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
-      {state.message && (
-        <div
-          key="error"
-          role="alert"
-          className="animate-shake rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
-        >
-          {state.message}
-        </div>
-      )}
+      <FocusFirstError errors={state.fieldErrors} />
+      {next && <input type="hidden" name="next" value={next} />}
+      <FormAlert state={state} />
 
       <Input
         type="email"
@@ -33,7 +29,7 @@ export function LoginForm() {
         placeholder="voce@exemplo.com"
         autoComplete="email"
         required
-        error={state.errors?.email}
+        error={state.fieldErrors?.email ?? state.errors?.email}
       />
 
       <Input
@@ -43,7 +39,7 @@ export function LoginForm() {
         placeholder="Sua senha"
         autoComplete="current-password"
         required
-        error={state.errors?.password}
+        error={state.fieldErrors?.password ?? state.errors?.password}
       />
 
       <Button

@@ -5,6 +5,8 @@ import { registerUser } from "@/app/actions/register";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import type { RegisterState } from "@/lib/types";
+import { FormAlert } from "@/app/components/forms/form-alert";
+import { FocusFirstError } from "@/app/components/forms/focus-first-error";
 
 const initialState: RegisterState = {};
 
@@ -20,15 +22,8 @@ export function RegisterForm() {
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
-      {state.message && (
-        <div
-          key="error"
-          role="alert"
-          className="animate-shake rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
-        >
-          {state.message}
-        </div>
-      )}
+      <FocusFirstError errors={state.fieldErrors} />
+      <FormAlert state={state} />
 
       <Input
         type="text"
@@ -37,7 +32,7 @@ export function RegisterForm() {
         placeholder="Seu nome"
         autoComplete="name"
         required
-        error={state.errors?.name}
+        error={state.fieldErrors?.name ?? state.errors?.name}
       />
 
       <Input
@@ -47,19 +42,19 @@ export function RegisterForm() {
         placeholder="voce@exemplo.com"
         autoComplete="email"
         required
-        error={state.errors?.email}
+        error={state.fieldErrors?.email ?? state.errors?.email}
       />
 
       <Input
         type="password"
         name="password"
         label="Senha"
-        placeholder="Mínimo de 6 caracteres"
+        placeholder="Mínimo de 8 caracteres"
         autoComplete="new-password"
         required
         value={password}
         onChange={(event) => setPassword(event.target.value)}
-        error={state.errors?.password}
+        error={state.fieldErrors?.password ?? state.errors?.password}
       />
 
       <Input
@@ -74,7 +69,7 @@ export function RegisterForm() {
         error={
           passwordsDiffer
             ? "As senhas não coincidem."
-            : state.errors?.confirmPassword
+            : state.fieldErrors?.confirmPassword ?? state.errors?.confirmPassword
         }
       />
 

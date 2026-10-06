@@ -1,0 +1,9 @@
+import "server-only";
+import { apiRequest } from "@/lib/api/client";
+import { decodeTemplate, decodeTemplateList, isUuid, type CreateTemplate, type RpgTemplate, type UpdateTemplate } from "@/lib/api/contracts";
+import type { ApiResult } from "@/lib/api/errors";
+export const listTemplates = (collectionId: string) => isUuid(collectionId) ? apiRequest<RpgTemplate[]>(`/rpg-collections/${collectionId}/templates`, { method: "GET", auth: "session", parseResponse: decodeTemplateList }) : Promise.resolve<ApiResult<RpgTemplate[]>>({ ok: false, error: { kind: "invalid-response", message: "Invalid collection identifier" } });
+export const getTemplate = (id: string) => isUuid(id) ? apiRequest<RpgTemplate>(`/rpg-templates/${id}`, { method: "GET", auth: "session", parseResponse: decodeTemplate }) : Promise.resolve<ApiResult<RpgTemplate>>({ ok: false, error: { kind: "invalid-response", message: "Invalid template identifier" } });
+export const createTemplate = (collectionId: string, input: CreateTemplate) => isUuid(collectionId) ? apiRequest<RpgTemplate>(`/rpg-collections/${collectionId}/templates`, { method: "POST", auth: "session", body: input, parseResponse: decodeTemplate }) : Promise.resolve<ApiResult<RpgTemplate>>({ ok: false, error: { kind: "invalid-response", message: "Invalid collection identifier" } });
+export const updateTemplate = (id: string, input: UpdateTemplate) => isUuid(id) ? apiRequest<RpgTemplate>(`/rpg-templates/${id}`, { method: "PATCH", auth: "session", body: input, parseResponse: decodeTemplate }) : Promise.resolve<ApiResult<RpgTemplate>>({ ok: false, error: { kind: "invalid-response", message: "Invalid template identifier" } });
+export const deleteTemplate = (id: string) => isUuid(id) ? apiRequest<void>(`/rpg-templates/${id}`, { method: "DELETE", auth: "session" }) : Promise.resolve<ApiResult<void>>({ ok: false, error: { kind: "invalid-response", message: "Invalid template identifier" } });
