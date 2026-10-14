@@ -1,0 +1,18 @@
+services:
+  web:
+    image: node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20
+    container_name: gr-web-media-demo
+    user: "1000:1000"
+    working_dir: /app
+    network_mode: host
+    command: ["node", "node_modules/next/dist/bin/next", "dev", "--hostname", "127.0.0.1", "--port", "3002"]
+    environment:
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: "1"
+      MEDIA_DEMO_IMAGE_PATH: /run/media-demo/teste.jpg
+    volumes:
+      - .:/app
+      - type: bind
+        source: ${MEDIA_DEMO_IMAGE_PATH:?Configure MEDIA_DEMO_IMAGE_PATH no .env.local}
+        target: /run/media-demo/teste.jpg
+        read_only: true
