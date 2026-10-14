@@ -125,8 +125,9 @@ export function decodeTemplate(value: unknown): RpgTemplate {
 export function decodeRecord(value: unknown): RpgRecord {
   const source = objectValue(value, "Record");
   const values = objectValue(source.values, "values");
-  const decodedValues: RecordValues = Object.create(null) as RecordValues;
-  for (const [key, entry] of Object.entries(values)) decodedValues[key] = requiredString(entry, `values.${key}`);
+  // fromEntries creates a normal, serializable record while keeping keys such as
+  // __proto__ as own data properties instead of mutating the object's prototype.
+  const decodedValues = Object.fromEntries(Object.entries(values).map(([key, entry]) => [key, requiredString(entry, `values.${key}`)])) as RecordValues;
   return { id: uuid(source.id, "id"), templateId: uuid(source.templateId, "templateId"), values: decodedValues, createdAt: isoDate(source.createdAt, "createdAt"), updatedAt: isoDate(source.updatedAt, "updatedAt") };
 }
 export function decodeRecordPage(value: unknown): RecordPage {
